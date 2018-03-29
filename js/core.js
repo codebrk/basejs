@@ -7,7 +7,7 @@ function BaseJS(is_dev) {
 
     // private methods
     var appendPrepend = function(e, t, n) {
-        if ("string" == typeof t) {
+        if ("string" === typeof t) {
             t = (new DOMParser).parseFromString(t, "text/html").getElementsByTagName("body")[0].childNodes
         } else t = [t];
         for (var i = 0; i < t.length; i++) {
@@ -140,31 +140,35 @@ function BaseJS(is_dev) {
         return _self;
     };
 
-    this.select = function (sel) {
-        return new this.fn(sel);
-    };
-
-
-    // base methods
-    this.in = function (iterable) {
-        var keys = Object.keys(iterable);
-        if (iterable instanceof Array) {
-            keys.pop();
-        }
-        var _self = {};
-        _self.first = iterable[0];
-        _self.last = iterable[iterable.length - 1];
-        _self.get = function(i) { return iterable[i]; };
-        _self.each = function (callback) {
-            var i;
-            for (i = 0; i < keys.length; i++) {
-                var key = keys[i];
-                if (iterable instanceof Array) {
-                    key = parseInt(key);
-                }
-                callback(key, iterable[key]);
-            }
-        };
-        return _self;
+    this.fn.prototype.each = function (callback) {
+        base.in(this).each(function (key, val) {
+            callback(val);
+        });
     };
 }
+
+BaseJS.prototype.in = function (iterable) {
+    var keys = Object.keys(iterable);
+    if (iterable instanceof Array) {
+        keys.pop();
+    }
+    var _self = {};
+    _self.first = iterable[0];
+    _self.last = iterable[iterable.length - 1];
+    _self.get = function(i) { return iterable[i]; };
+    _self.each = function (callback) {
+        var i;
+        for (i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (iterable instanceof Array) {
+                key = parseInt(key);
+            }
+            callback(key, iterable[key]);
+        }
+    };
+    return _self;
+};
+
+BaseJS.prototype.select = function (sel) {
+    return new this.fn(sel);
+};
