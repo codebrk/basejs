@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>BaseJS</title>
 </head>
-<body>
+<body bs-app>
 <button class="home">button 1</button>
 <button>button 2</button>
 <button>button 3</button>
@@ -12,13 +12,17 @@
 <h1>heading 1</h1>
 <h1>heading 2</h1>
 
+<input type="text" base-bind>
+
 <script src="dist/js/base.js"></script>
 <script>
     var $ = new BaseJS();
 
     $.select("button").on("click").call(function () {
-        console.log("hello");
+        console.log(this.innerHTML);
     });
+
+    console.log(document.querySelectorAll("[base-bind]"));
 </script>
 </body>
 </html>
