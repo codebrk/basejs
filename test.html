@@ -16,7 +16,9 @@
 <script>
     var $ = new BaseJS();
 
-    console.log($.select("button").removeClass("home"))
+    $.select("button").on("click").call(function () {
+        console.log("hello");
+    });
 </script>
 </body>
 </html>

@@ -1,6 +1,9 @@
 function BaseJS(is_dev) {
     if (is_dev === undefined) { is_dev = false; }
     var base = this;
+    base.version = "1.0.0";
+    base.name = "BaseJS";
+    base.author = "Jeeva";
 
     // private methods
     var appendPrepend = function(e, t, n) {
@@ -11,6 +14,13 @@ function BaseJS(is_dev) {
             var s = t[i].cloneNode(!0);
             n ? e.appendChild(s) : e.insertBefore(s, e.firstChild)
         }
+    };
+
+    var addEvent = function(e, t, n) {
+        return e.addEventListener(t, n, !1), e.base_events || (e.base_events = []), e.base_events.push({
+            eType: t,
+            callBack: n
+        }), this;
     };
 
     this.fn = function (e) {
@@ -112,6 +122,22 @@ function BaseJS(is_dev) {
             el.setAttribute(key, val);
         });
         return this;
+    };
+
+    this.fn.prototype.on = function () {
+        var _self = {};
+        var currentObj = this;
+        var args = arguments;
+        _self.call = function (callback) {
+            base.in(args).each(function (key, val) {
+                base.in(currentObj).each(function (i, el) {
+                    addEvent(el, val, callback);
+                });
+                return currentObj;
+            });
+        };
+
+        return _self;
     };
 
     this.select = function (sel) {
