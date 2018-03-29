@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BaseJS</title>
+</head>
+<body>
+<button class="home">button 1</button>
+<button>button 2</button>
+<button>button 3</button>
+
+<h1>heading 1</h1>
+<h1>heading 2</h1>
+
+<script src="dist/js/base.js"></script>
+<script>
+    var $ = new BaseJS();
+
+    console.log($.select("button").removeClass("home"))
+</script>
+</body>
+</html>
