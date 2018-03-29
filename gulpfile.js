@@ -9,7 +9,8 @@ const gulp = require('gulp'),
 gulp.task("concatJs", function() {
     return gulp.src([
         "js/core.js",
-        "js/ui/*.js"
+        "js/ui/*.js",
+        "js/http/*.js"
     ])
         .pipe(maps.init())
         .pipe(concat("base.js"))

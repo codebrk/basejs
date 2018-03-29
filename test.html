@@ -18,11 +18,9 @@
 <script>
     var $ = new BaseJS();
 
-    $.select("button").on("click").call(function () {
-        console.log(this.innerHTML);
-    });
+    // console.log($.select("body").append($.createUI("button").html("hello")[0]));
 
-    console.log(document.querySelectorAll("[base-bind]"));
+    $.http.get("http://httpbin.org/headers").headers({"Name": "Jeeva"})
 </script>
 </body>
 </html>
