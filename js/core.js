@@ -1,3 +1,7 @@
+/*
+
+*/
+
 function BaseJS(is_dev) {
     if (is_dev === undefined) { is_dev = false; }
     var base = this;
@@ -39,8 +43,8 @@ function BaseJS(is_dev) {
     this.fn.prototype = [];
 
     this.fn.prototype.css = function (styles) {
-        base.in(styles).each(function (key, val) {
-            base.in(this).each(function (key2, val2) {
+        base.in(this).each(function (key2, val2) {
+            base.in(styles).each(function (key, val) {
                 val2.style[key] = val;
             });
         });
@@ -61,7 +65,21 @@ function BaseJS(is_dev) {
         return this;
     };
 
+    this.fn.prototype.val = function (content) {
+        if (content === undefined) {
+            return this[0].value;
+        }
+        base.in(this).each(function (key, val) {
+            val.value = content;
+        });
+        return this;
+    };
+
     this.fn.prototype.add = function (els) {
+        if ("string" === typeof els) {
+            els = document.querySelectorAll(els);
+        }
+
         var currentObj = this;
         base.in(els).each(function (key, val) {
             currentObj.push(val);
@@ -144,12 +162,70 @@ function BaseJS(is_dev) {
         base.in(this).each(function (key, val) {
             callback(val);
         });
+        return this;
+    };
+
+    this.fn.prototype.find = function(sel) {
+        _self = this;
+        _new = [];
+        base.in(this).each(function(i, el) {
+            var contain = document.createElement("div");
+            contain.appendChild(el.cloneNode());
+            if (contain.querySelectorAll(sel).length > 0) {
+                _new.push(el);
+            }
+        });
+
+        base.in(this).each(function(i, el) {
+            _self.pop();
+        });
+
+        base.in(_new).each(function(i, el) {
+            _self.push(el);
+        });
+        return this;
+    };
+
+    this.fn.prototype.children = function(sel) {
+        var childs = [];
+        base.in(this).each(function(i, el) {
+            if (sel === undefined) {
+                base.in(el.children).each(function(j, child) {
+                    childs.push(child);
+                });
+            } else {
+                base.in(el.querySelectorAll(sel)).each(function(j, child) {
+                    childs.push(child);
+                });
+            }
+        });
+
+        base.in(this).each(function(i, el) {
+            _self.pop();
+        });
+        base.in(childs).each(function(i, el) {
+            _self.push(el);
+        });
+        return this;
+    };
+
+
+    this.fn.prototype.change = function(callback) {
+        base.in(this).each(function(i, el) {
+            el_old_value = el.value;
+            el.addEventListener("keyup", function() {
+                if (el.value !== el_old_value) {
+                    callback(el);
+                }
+            }, false);
+        });
+        return this;
     };
 }
 
 BaseJS.prototype.in = function (iterable) {
     var keys = Object.keys(iterable);
-    if (iterable instanceof Array) {
+    if (iterable instanceof Array && keys[keys.length - 1] == "length") {
         keys.pop();
     }
     var _self = {};
@@ -171,4 +247,10 @@ BaseJS.prototype.in = function (iterable) {
 
 BaseJS.prototype.select = function (sel) {
     return new this.fn(sel);
+};
+
+BaseJS.prototype.ready = function(callback) {
+    window.addEventListener("load", function() {
+        callback();
+    }, false);
 };
